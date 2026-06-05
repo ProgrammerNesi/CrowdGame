@@ -19,11 +19,10 @@ Behavior:
 * Users can enter any room code.
 * If no room code is entered, the application falls back to `DEMO`.
 * Removes dependence on a hardcoded room.
-* Improves usability when hosting multiple game sessions.
 
 ### 2. Progressive Difficulty System
 
-Added a progressive difficulty mechanic on the mobile controller.
+Added a progressive difficulty mechanism on the mobile controller.
 
 As puzzle completion increases:
 
