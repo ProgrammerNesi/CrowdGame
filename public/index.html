@@ -126,8 +126,17 @@
     
     <div class="btn-group">
       <a href="/admin" class="btn btn-pink">Enter Admin Panel</a>
-      <a href="/screen/DEMO" class="btn btn-cyan">Open Big Screen Display</a>
+      <button id="openScreenBtn" class="btn btn-cyan">Open Big Screen Display</button>
     </div>
   </div>
+
+  <script>
+    document.getElementById('openScreenBtn').addEventListener('click', () => {
+      const roomCode = prompt('Enter room code:', 'DEMO').trim().toUpperCase();
+      if (roomCode && roomCode.length > 0) {
+        window.location.href = `/screen/${roomCode}`;
+      }
+    });
+  </script>
 </body>
 </html>
