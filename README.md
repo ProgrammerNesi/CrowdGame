@@ -87,7 +87,7 @@ admin123
 
 ![Room Code Prompt](docs/screenshots/room-code-prompt.png)
 
-### Big Screen View
+### Initial
 
 ![Big Screen View](docs/screenshots/big-screen-view.png)
 
