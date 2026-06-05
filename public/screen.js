@@ -390,13 +390,11 @@ function drawJigsaw() {
   // 4. Draw Floating unplaced pieces (upper layer with neon border glows)
   puzzleData.pieces.forEach(p => {
     if (!p.isPlaced && p.imgElement) {
-      puzzleCtx.save();
       // Draw neon placeholder box glow
       puzzleCtx.shadowBlur = 15;
       puzzleCtx.shadowColor = '#00f3ff';
       puzzleCtx.strokeStyle = 'rgba(0, 243, 255, 0.6)';
       puzzleCtx.lineWidth = 2;
-      // Use puzzleData.pieceHeight (p.pieceHeight is not in the screen state payload)
       puzzleCtx.strokeRect(p.currentX, p.currentY, puzzleData.pieceWidth, puzzleData.pieceHeight);
 
       // Draw actual piece image
@@ -407,7 +405,6 @@ function drawJigsaw() {
         puzzleData.pieceWidth,
         puzzleData.pieceHeight
       );
-      puzzleCtx.restore();
     }
   });
 

@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let piecesPlacedCount = 0;
   let currentAssignedPieces = [];
   let selectedPieceIndex = 0;
+  let gameProgress = 0; // Track puzzle progress for progressive blur
 
   // Workspace configuration
   const CANVAS_WIDTH = 1200;
@@ -89,7 +90,8 @@ document.addEventListener('DOMContentLoaded', () => {
       headerColorDot.style.backgroundColor = myColor;
       headerColorDot.style.boxShadow = `0 0 8px ${myColor}`;
       
-      gameProgressPct.textContent = `${data.state.progress}%`;
+      gameProgress = data.state.progress || 0;
+      gameProgressPct.textContent = `${gameProgress}%`;
       currentAssignedPieces = data.state.assignedPieces || [];
       selectedPieceIndex = 0;
       
@@ -124,12 +126,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('piece-placed', (data) => {
-      gameProgressPct.textContent = `${data.progress}%`;
+      gameProgress = data.progress || 0;
+      gameProgressPct.textContent = `${gameProgress}%`;
       // Check if this was solved by me
       if (data.placedBy.toLowerCase() === myDisplayName.toLowerCase()) {
         piecesPlacedCount++;
         triggerHapticFeedback(true);
       }
+      // Update blur on draggable piece
+      const el = document.getElementById(currentAssignedPieces[selectedPieceIndex]?.id);
+      if (el) applyProgressiveBlur(el);
     });
 
     socket.on('placement-incorrect', (data) => {
@@ -193,12 +199,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     assignedPiecesPool.appendChild(el);
     setupDragging(el, p);
-
-    // Show a hint label indicating the grid target (row, col) for this piece
-    const hint = document.createElement('div');
-    hint.style.cssText = 'position:absolute;bottom:6px;left:0;right:0;text-align:center;font-size:11px;color:rgba(0,243,255,0.5);font-family:monospace;pointer-events:none;';
-    hint.textContent = `Target: row ${p.row + 1}, col ${p.col + 1}`;
-    assignedPiecesPool.appendChild(hint);
+    
+    // Apply progressive blur based on current game progress
+    applyProgressiveBlur(el);
 
     // Render selector tabs if there are multiple pieces
     if (currentAssignedPieces.length > 1) {
@@ -212,7 +215,6 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
           <div class="piece-tab-info">
             <span class="tab-title">Piece ${idx + 1}</span>
-            <span class="tab-target">Row ${piece.row + 1}, Col ${piece.col + 1}</span>
           </div>
         `;
         
@@ -226,6 +228,13 @@ document.addEventListener('DOMContentLoaded', () => {
         pieceSelectorContainer.appendChild(tab);
       });
     }
+  }
+
+  // Apply progressive blur to piece based on game progress
+  function applyProgressiveBlur(element) {
+    const maxBlurAmount = 10; // Max blur at 100% progress
+    const blurAmount = (gameProgress / 100) * maxBlurAmount;
+    element.style.filter = `blur(${blurAmount.toFixed(1)}px)`;
   }
 
   function setupDragging(element, pieceInfo) {
