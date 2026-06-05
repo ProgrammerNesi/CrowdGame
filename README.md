@@ -115,5 +115,3 @@ admin123
 * Blur-based difficulty is visual only and does not modify puzzle scoring.
 * Difficulty settings are currently fixed and not configurable from the admin panel.
 
-```
-```
